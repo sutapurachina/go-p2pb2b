@@ -26,8 +26,7 @@ validate:
 	export GO111MODULE=on &&\
 		${GO_RUN} go mod tidy &&\
 		${GO_RUN} go mod vendor &&\
-		${GO_RUN} go mod verify &&\
-		${GO_RUN} golint $$(${GO_RUN} go list ./... | grep -v /vendor/)
+		${GO_RUN} go mod verify
 
 
 .PHONY: test

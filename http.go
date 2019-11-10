@@ -1,20 +1,31 @@
 package p2pb2b
 
 import (
+	"bytes"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 )
 
+const HEADER_X_TXC_APIKEY = "X-TXC-APIKEY"
+const HEADER_X_TXC_PAYLOAD = "X-TXC-PAYLOAD"
+const HEADER_X_TXC_SIGNATURE = "X-TXC-SIGNATURE"
+
 type auth struct {
-	ServiceToken string
-	AccessToken  string
+	APIKey    string
+	APISecret string
 }
 
 type client struct {
 	http *http.Client
 	auth *auth
+	url  string
 }
 
 type response struct {
@@ -53,9 +64,25 @@ func query(params url.Values) string {
 }
 
 func (c *client) sendPost(url string, additionalHeaders map[string]string, body io.Reader) (*response, error) {
-	req, err := http.NewRequest("POST", url, body)
+	bodyBytes, err := ioutil.ReadAll(body)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequest("POST", url, bytes.NewReader(bodyBytes))
 	if err != nil {
 		return &response{}, fmt.Errorf("error creating POST request, %v", err)
+	}
+
+	if additionalHeaders == nil {
+		additionalHeaders = make(map[string]string)
+	}
+	additionalHeaders[HEADER_X_TXC_PAYLOAD] = base64.StdEncoding.EncodeToString(bodyBytes)
+
+	if c.auth != nil {
+		h := hmac.New(sha256.New, []byte(c.auth.APISecret))
+		h.Write(bodyBytes)
+		signature := hex.EncodeToString(h.Sum(nil))
+		additionalHeaders[HEADER_X_TXC_SIGNATURE] = signature
 	}
 
 	return c.sendRequest(req, additionalHeaders)
@@ -106,22 +133,19 @@ func (c *client) sendRequest(request *http.Request, additionalHeaders map[string
 	}
 
 	thisHeaders := map[string]string{}
+	thisHeaders["Content-type"] = "application/json"
 	if c.auth != nil {
-		thisHeaders["Authorization"] = fmt.Sprintf("bearer %s", c.auth.ServiceToken)
-		thisHeaders["X-User-Token"] = fmt.Sprintf("bearer %s", c.auth.AccessToken)
+		thisHeaders[HEADER_X_TXC_APIKEY] = c.auth.APIKey
 	}
-
 	headers := mergeHeaders(additionalHeaders, thisHeaders)
-
 	for k, v := range headers {
 		request.Header.Add(k, v)
 	}
-
 	resp, err := c.http.Do(request)
 	if err != nil {
+		fmt.Println(fmt.Sprintf("erro: %v", err))
 		return nil, err
 	}
-
 	return &response{
 		StatusCode: resp.StatusCode,
 		Status:     resp.Status,

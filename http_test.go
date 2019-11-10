@@ -40,15 +40,12 @@ func TestSendGet(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, r.Method, "GET")
 		assert.Equal(t, r.URL.String(), "/somePath")
-		assert.NotEmpty(t, r.Header.Get("X-Request-Id"))
-		assert.Equal(t, r.Header.Get("Authorization"), fmt.Sprintf("bearer %s", "SomeServiceToken"))
-		assert.Equal(t, r.Header.Get("X-User-Token"), fmt.Sprintf("bearer %s", "SomeAccessToken"))
+		assert.Equal(t, r.Header.Get(HEADER_X_TXC_APIKEY), "Ireallydontcare")
 	}))
 	defer ts.Close()
 
 	auth := &auth{
-		AccessToken:  "SomeAccessToken",
-		ServiceToken: "SomeServiceToken",
+		APIKey: "Ireallydontcare",
 	}
 	client := &client{
 		http: &http.Client{},
@@ -65,23 +62,18 @@ func TestSendGetWithAdditionalHeaders(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, r.Method, "GET")
 		assert.Equal(t, r.URL.String(), "/somePath")
-		assert.Equal(t, r.Header.Get("X-Request-Id"), "SomeRequestId")
-		assert.Equal(t, r.Header.Get("Authorization"), fmt.Sprintf("bearer %s", "SomeServiceToken"))
-		assert.Equal(t, r.Header.Get("X-User-Token"), fmt.Sprintf("bearer %s", "SomeAccessToken"))
+		assert.Equal(t, r.Header.Get(HEADER_X_TXC_APIKEY), "Ireallydontcare")
 	}))
 	defer ts.Close()
 
 	auth := &auth{
-		AccessToken:  "SomeAccessToken",
-		ServiceToken: "SomeServiceToken",
+		APIKey: "Ireallydontcare",
 	}
 	client := &client{
 		http: &http.Client{},
 		auth: auth,
 	}
-	headers := map[string]string{}
-	headers["X-Request-Id"] = "SomeRequestId"
-	_, err := client.sendGet(fmt.Sprintf("%s/%s", ts.URL, "somePath"), headers)
+	_, err := client.sendGet(fmt.Sprintf("%s/%s", ts.URL, "somePath"), nil)
 	if err != nil {
 		t.Errorf("error in SendGet, %v", err)
 	}
