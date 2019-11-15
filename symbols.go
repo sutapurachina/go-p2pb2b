@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type SymbolsResult struct {
@@ -14,6 +15,10 @@ type SymbolsResult struct {
 func (c *client) GetSymbols() (*SymbolsResult, error) {
 	url := fmt.Sprintf("%s/public/symbols", c.url)
 	resp, err := c.sendGet(url, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type ProductsResult struct {
@@ -20,6 +21,10 @@ type Product struct {
 func (c *client) GetProducts() (*ProductsResult, error) {
 	url := fmt.Sprintf("%s/public/products", c.url)
 	resp, err := c.sendGet(url, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}

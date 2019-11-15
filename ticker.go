@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type Ticker struct {
@@ -26,6 +27,10 @@ type TickerEntry struct {
 func (c *client) GetTicker(market string) (*Ticker, error) {
 	url := fmt.Sprintf("%s/public/ticker?market=%s", c.url, market)
 	resp, err := c.sendGet(url, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}

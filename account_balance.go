@@ -34,6 +34,10 @@ func (c *client) PostCurrencyBalance(request *AccountBalanceRequest) (*AccountBa
 	if err != nil {
 		return nil, err
 	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, err
+	}
 
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

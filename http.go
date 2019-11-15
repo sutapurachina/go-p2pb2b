@@ -35,6 +35,15 @@ type response struct {
 	Status     string
 }
 
+func checkHTTPStatus(resp response, expected ...int) error {
+	for _, e := range expected {
+		if resp.StatusCode == e {
+			return nil
+		}
+	}
+	return fmt.Errorf("http response status != %+v, got %d", expected, resp.StatusCode)
+}
+
 func mergeHeaders(firstHeaders map[string]string, secondHeaders map[string]string) map[string]string {
 	if secondHeaders == nil {
 		return firstHeaders

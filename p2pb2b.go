@@ -1,7 +1,9 @@
 package p2pb2b
 
 import (
+	"math"
 	"net/http"
+	"time"
 )
 
 const base_api = "https://api.p2pb2b.io/api/v1"
@@ -31,10 +33,17 @@ type Client interface {
 	GetMarkets() (*MarketsResult, error)
 	GetTickers() (*TickersResult, error)
 	GetTicker(market string) (*Ticker, error)
+	GetOrderBook(market string, side string, offset int64, limit int64) (*OrderBookResult, error)
 	GetProducts() (*ProductsResult, error)
 	GetSymbols() (*SymbolsResult, error)
 }
 
-func (c *client) withURL(url string) {
-	c.url = url
+type Result struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+func TimestampToTime(timestamp float64) time.Time {
+	sec, dec := math.Modf(timestamp)
+	return time.Unix(int64(sec), int64(dec*(1e9)))
 }

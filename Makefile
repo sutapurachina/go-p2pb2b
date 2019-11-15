@@ -24,15 +24,12 @@ clean:
 .PHONY: validate
 validate:
 	export GO111MODULE=on &&\
-		${GO_RUN} go mod tidy &&\
-		${GO_RUN} go mod vendor &&\
-		${GO_RUN} go mod verify
+		${GO_RUN} /bin/bash -c "cd /usr/src/myapp && go mod tidy && go mod vendor && go mod verify"
 
 
 .PHONY: test
 test:
-	${GO_RUN} go vet -v $$(${GO_RUN} go list ./... | grep -v /vendor/) &&\
-	${GO_RUN} go test -v -race -cover $$(${GO_RUN} go list ./... | grep -v /vendor/)
+	${GO_RUN} go test -v -race -cover $$(go list ./... | grep -v /vendor/)
 
 
 .PHONY: build

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
 type TickersResult struct {
@@ -28,6 +29,10 @@ type TickersEntry struct {
 func (c *client) GetTickers() (*TickersResult, error) {
 	url := fmt.Sprintf("%s/public/tickers", c.url)
 	resp, err := c.sendGet(url, nil)
+	if err != nil {
+		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
 	if err != nil {
 		return nil, err
 	}
