@@ -14,8 +14,8 @@ type AccountBalancesResult struct {
 }
 
 type AccountBalance struct {
-	Available float64 `json:"available"`
-	Freeze    float64 `json:"freeze"`
+	Available float64 `json:"available,string"`
+	Freeze    float64 `json:"freeze,string"`
 }
 
 type AccountBalancesRequest struct {

@@ -31,6 +31,7 @@ func NewClient(apiKey string, apiSecret string) (Client, error) {
 type Client interface {
 	PostCurrencyBalance(request *AccountCurrencyBalanceRequest) (*AccountCurrencyBalanceResult, error)
 	PostBalances(request *AccountBalancesRequest) (*AccountBalancesResult, error)
+	PostCreateOrder(request *OrdersCreateRequest) (*OrdersCreateResult, error)
 	GetMarkets() (*MarketsResult, error)
 	GetTickers() (*TickersResult, error)
 	GetTicker(market string) (*Ticker, error)

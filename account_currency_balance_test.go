@@ -1,7 +1,7 @@
 package p2pb2b
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -51,22 +51,18 @@ func TestPostCurrencyBalance(t *testing.T) {
 
 		w.WriteHeader(http.StatusOK)
 
-		balanceMap := map[string]AccountCurrencyBalance{}
-		balanceMap["blubb"] = AccountCurrencyBalance{
-			Available: 5.0,
-			Freeze:    1.0,
-		}
-		result := &AccountCurrencyBalanceResult{
-			CurrencyBalances: balanceMap,
-		}
-		result.Success = true
-		result.Message = ""
-		asJSON, err := json.Marshal(result)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		}
+		resp := `{
+		  "success": true,
+		  "message": "",
+		  "result": {
+			"ETH": {
+			  "available": "0.63",
+			  "freeze": "0"
+			}
+		  }
+		}`
 
-		w.Write(asJSON)
+		w.Write([]byte(resp))
 	}))
 	defer ts.Close()
 
@@ -79,5 +75,7 @@ func TestPostCurrencyBalance(t *testing.T) {
 		Nonce:   "matter",
 	}
 	resp, err := client.PostCurrencyBalance(request)
+	assert.NotNil(t, resp, fmt.Sprintf("erro: %v", err))
 	assert.Equal(t, true, resp.Success)
+	assert.Equal(t, 0.63, resp.CurrencyBalances["ETH"].Available)
 }
