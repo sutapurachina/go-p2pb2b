@@ -8,8 +8,8 @@ import (
 	"net/url"
 )
 
-type OrderBookResult struct {
-	Result
+type OrderBookResp struct {
+	Response
 	OrderBook OrderBook `json:"result"`
 }
 
@@ -36,7 +36,7 @@ type OrderBookEntry struct {
 	DealMoney float64 `json:"dealMoney,string"`
 }
 
-func (c *client) GetOrderBook(market string, side string, offset int64, limit int64) (*OrderBookResult, error) {
+func (c *client) GetOrderBook(market string, side string, offset int64, limit int64) (*OrderBookResp, error) {
 	if market == "" {
 		return nil, fmt.Errorf("parameter market must not be empty")
 	}
@@ -71,7 +71,7 @@ func (c *client) GetOrderBook(market string, side string, offset int64, limit in
 		return nil, err
 	}
 
-	var result OrderBookResult
+	var result OrderBookResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

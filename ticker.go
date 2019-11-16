@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-type Ticker struct {
-	Result
+type TickerResp struct {
+	Response
 	Ticker TickerEntry `json:"result"`
 }
 
@@ -24,7 +24,7 @@ type TickerEntry struct {
 	Change float64 `json:"change,string"`
 }
 
-func (c *client) GetTicker(market string) (*Ticker, error) {
+func (c *client) GetTicker(market string) (*TickerResp, error) {
 	url := fmt.Sprintf("%s/public/ticker?market=%s", c.url, market)
 	resp, err := c.sendGet(url, nil)
 	if err != nil {
@@ -40,7 +40,7 @@ func (c *client) GetTicker(market string) (*Ticker, error) {
 		return nil, err
 	}
 
-	var result Ticker
+	var result TickerResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

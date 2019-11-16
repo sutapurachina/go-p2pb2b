@@ -8,8 +8,8 @@ import (
 	"net/url"
 )
 
-type HistoryResult struct {
-	Result
+type HistoryResp struct {
+	Response
 	HistoryEntries []HistoryEntry `json:"result"`
 }
 
@@ -21,7 +21,7 @@ type HistoryEntry struct {
 	Price  string  `json:"price"`
 }
 
-func (c *client) GetHistory(market string, lastID int64, limit int64) (*HistoryResult, error) {
+func (c *client) GetHistory(market string, lastID int64, limit int64) (*HistoryResp, error) {
 	if market == "" {
 		return nil, fmt.Errorf("parameter market must not be empty")
 	}
@@ -52,7 +52,7 @@ func (c *client) GetHistory(market string, lastID int64, limit int64) (*HistoryR
 		return nil, err
 	}
 
-	var result HistoryResult
+	var result HistoryResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

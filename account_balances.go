@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-type AccountBalancesResult struct {
-	Result
+type AccountBalancesResp struct {
+	Response
 	Balances map[string]AccountBalance `json:"result"`
 }
 
@@ -19,11 +19,10 @@ type AccountBalance struct {
 }
 
 type AccountBalancesRequest struct {
-	Request string `json:"request"`
-	Nonce   string `json:"nonce"`
+	Request
 }
 
-func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalancesResult, error) {
+func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalancesResp, error) {
 	url := fmt.Sprintf("%s/account/balances", c.url)
 	asJSON, err := json.Marshal(request)
 	if err != nil {
@@ -47,7 +46,7 @@ func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalances
 		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
 	}
 
-	var result AccountBalancesResult
+	var result AccountBalancesResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

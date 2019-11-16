@@ -7,12 +7,12 @@ import (
 	"net/http"
 )
 
-type SymbolsResult struct {
-	Result
+type SymbolsResp struct {
+	Response
 	Symbols []string `json:"result"`
 }
 
-func (c *client) GetSymbols() (*SymbolsResult, error) {
+func (c *client) GetSymbols() (*SymbolsResp, error) {
 	url := fmt.Sprintf("%s/public/symbols", c.url)
 	resp, err := c.sendGet(url, nil)
 	if err != nil {
@@ -28,7 +28,7 @@ func (c *client) GetSymbols() (*SymbolsResult, error) {
 		return nil, err
 	}
 
-	var result SymbolsResult
+	var result SymbolsResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

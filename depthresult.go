@@ -8,8 +8,8 @@ import (
 	"net/url"
 )
 
-type DepthResult struct {
-	Result
+type DepthResultResp struct {
+	Response
 	DepthResult DepthResultResult `json:"result"`
 	CacheTime   float64           `json:"cache_time"`
 	CurrentTime float64           `json:"current_time"`
@@ -22,7 +22,7 @@ type DepthResultResult struct {
 
 type Float64Pair [2]float64
 
-func (c *client) GetDepthResult(market string, limit int64) (*DepthResult, error) {
+func (c *client) GetDepthResult(market string, limit int64) (*DepthResultResp, error) {
 	if market == "" {
 		return nil, fmt.Errorf("parameter market must not be empty")
 	}
@@ -49,7 +49,7 @@ func (c *client) GetDepthResult(market string, limit int64) (*DepthResult, error
 		return nil, err
 	}
 
-	var result DepthResult
+	var result DepthResultResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

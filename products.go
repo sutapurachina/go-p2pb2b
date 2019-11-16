@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-type ProductsResult struct {
-	Result
+type ProductsResp struct {
+	Response
 	Products []Product `json:"result"`
 }
 
@@ -18,7 +18,7 @@ type Product struct {
 	ToSymbol   string `json:"toSymbol"`
 }
 
-func (c *client) GetProducts() (*ProductsResult, error) {
+func (c *client) GetProducts() (*ProductsResp, error) {
 	url := fmt.Sprintf("%s/public/products", c.url)
 	resp, err := c.sendGet(url, nil)
 	if err != nil {
@@ -34,7 +34,7 @@ func (c *client) GetProducts() (*ProductsResult, error) {
 		return nil, err
 	}
 
-	var result ProductsResult
+	var result ProductsResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

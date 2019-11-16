@@ -1,6 +1,7 @@
 package p2pb2b
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -29,8 +30,10 @@ func TestPostBalancesNoKeyProvided(t *testing.T) {
 		t.Error(err.Error())
 	}
 	request := &AccountBalancesRequest{
-		Request: "doesnt",
-		Nonce:   "matter",
+		Request: Request{
+			Request: "doesnt",
+			Nonce:   "matter",
+		},
 	}
 	_, err = client.PostBalances(request)
 	assert.True(t, err != nil)
@@ -39,6 +42,16 @@ func TestPostBalancesNoKeyProvided(t *testing.T) {
 func TestPostBalances(t *testing.T) {
 	pseudoAPIKey := uuid.NewV4()
 	pseudoAPISecret := "4a894c5c-8a7e-4337-bb6b-9fde16e3dddd"
+	body := `{
+		"success": true,
+		"message": "",
+		"result": {
+		"ETH": {
+			"available": "0.1",
+			"freeze": "0.4"
+		}
+		}
+	}`
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, "POST", r.Method)
@@ -50,19 +63,7 @@ func TestPostBalances(t *testing.T) {
 		assert.Equal(t, "dbc97a56c2949b099865f0cb11b3e4f01b9b00a519e8f7a995b2b6d9b7fedef4", r.Header.Get("X-TXC-SIGNATURE"))
 
 		w.WriteHeader(http.StatusOK)
-
-		resp := `{
-			"success": true,
-			"message": "",
-			"result": {
-			"ETH": {
-				"available": "0.1",
-				"freeze": "0.4"
-			}
-			}
-		}`
-
-		w.Write([]byte(resp))
+		w.Write([]byte(body))
 	}))
 	defer ts.Close()
 
@@ -71,12 +72,17 @@ func TestPostBalances(t *testing.T) {
 		t.Error(err.Error())
 	}
 	request := &AccountBalancesRequest{
-		Request: "doesnt",
-		Nonce:   "matter",
+		Request: Request{
+			Request: "doesnt",
+			Nonce:   "matter",
+		},
 	}
 	resp, err := client.PostBalances(request)
 
 	assert.NotNil(t, resp, fmt.Sprintf("error: %v", err))
 	assert.Equal(t, true, resp.Success)
-	assert.Equal(t, 0.4, resp.Balances["ETH"].Freeze)
+
+	respBytes, _ := json.Marshal(resp)
+	equal, _ := IsEqualJSON(body, string(respBytes))
+	assert.True(t, equal, fmt.Sprintf("%v is not equal to %v", body, resp))
 }

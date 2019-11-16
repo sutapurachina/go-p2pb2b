@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-type MarketsResult struct {
-	Result
+type MarketsResp struct {
+	Response
 	Markets []Market `json:"result"`
 }
 
@@ -22,7 +22,7 @@ type Market struct {
 	MinAmount string `json:"minAmount"`
 }
 
-func (c *client) GetMarkets() (*MarketsResult, error) {
+func (c *client) GetMarkets() (*MarketsResp, error) {
 	url := fmt.Sprintf("%s/public/markets", c.url)
 	resp, err := c.sendGet(url, nil)
 	if err != nil {
@@ -38,7 +38,7 @@ func (c *client) GetMarkets() (*MarketsResult, error) {
 		return nil, err
 	}
 
-	var result MarketsResult
+	var result MarketsResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

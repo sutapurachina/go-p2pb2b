@@ -7,12 +7,12 @@ import (
 	"net/http"
 )
 
-type TickersResult struct {
-	Result
-	Tickers map[string]TickersSnapshot `json:"result"`
+type TickersResp struct {
+	Response
+	Tickers map[string]TickersResult `json:"result"`
 }
 
-type TickersSnapshot struct {
+type TickersResult struct {
 	At     int64        `json:"at"`
 	Ticker TickersEntry `json:"ticker"`
 }
@@ -26,7 +26,7 @@ type TickersEntry struct {
 	Vol  float64 `json:"vol,string"`
 }
 
-func (c *client) GetTickers() (*TickersResult, error) {
+func (c *client) GetTickers() (*TickersResp, error) {
 	url := fmt.Sprintf("%s/public/tickers", c.url)
 	resp, err := c.sendGet(url, nil)
 	if err != nil {
@@ -42,7 +42,7 @@ func (c *client) GetTickers() (*TickersResult, error) {
 		return nil, err
 	}
 
-	var result TickersResult
+	var result TickersResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err
