@@ -34,6 +34,7 @@ type Client interface {
 	GetTickers() (*TickersResult, error)
 	GetTicker(market string) (*Ticker, error)
 	GetOrderBook(market string, side string, offset int64, limit int64) (*OrderBookResult, error)
+	GetHistory(market string, lastID int64, limit int64) (*HistoryResult, error)
 	GetProducts() (*ProductsResult, error)
 	GetSymbols() (*SymbolsResult, error)
 }
