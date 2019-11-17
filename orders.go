@@ -64,10 +64,26 @@ type QueryUnexecutedResp struct {
 }
 
 type QueryUnexecutedResult struct {
-	Limit  int64   `json:"limit"`
-	Offset int64   `json:"offset"`
-	Total  int64   `json:"total"`
-	Orders []Order `json:"result"`
+	Limit  int64             `json:"limit"`
+	Offset int64             `json:"offset"`
+	Total  int64             `json:"total"`
+	Orders []UnexecutedOrder `json:"result"`
+}
+
+type UnexecutedOrder struct {
+	Amount    float64 `json:"amount,string"`
+	DealFee   float64 `json:"dealFee,string"`
+	DealMoney float64 `json:"dealMoney,string"`
+	DealStock float64 `json:"dealStock,string"`
+	Left      float64 `json:"left,string"`
+	MakerFee  float64 `json:"makerFee,string"`
+	Market    string  `json:"market"`
+	ID        int64   `json:"id"`
+	Price     float64 `json:"price,string"`
+	Side      string  `json:"side"`
+	TakerFee  float64 `json:"takerFee,string"`
+	Timestamp float64 `json:"timestamp"`
+	Type      string  `json:"type"`
 }
 
 type QueryExecutedRequest struct {

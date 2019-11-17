@@ -2,7 +2,8 @@ package p2pb2b
 
 import (
 	"testing"
-	"github.com/satori/go.uuid"
+
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,10 +16,15 @@ func TestGetMarkets(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	t.Logf("found %d markets", len(markets.Markets))
-	t.Logf("sample market %+v", markets.Markets[0])
 
 	assert.NotNil(t, markets)
 	assert.True(t, markets.Success)
 	assert.True(t, len(markets.Markets) > 0)
+	assert.NotEmpty(t, markets.Markets[0].Name)
+	assert.NotEmpty(t, markets.Markets[0].Stock)
+	assert.NotEmpty(t, markets.Markets[0].StockPrec)
+	assert.NotEmpty(t, markets.Markets[0].Money)
+	assert.NotEmpty(t, markets.Markets[0].MoneyPrec)
+	assert.NotEmpty(t, markets.Markets[0].MinAmount)
+	assert.NotEmpty(t, markets.Markets[0].FeePrec)
 }

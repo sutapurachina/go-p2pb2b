@@ -13,13 +13,13 @@ type MarketsResp struct {
 }
 
 type Market struct {
-	Name      string `json:"name"`
-	MoneyPrec string `json:"moneyPrec"`
-	Stock     string `json:"stock"`
-	Money     string `json:"money"`
-	StockPrec string `json:"stockPrec"`
-	FeePrec   string `json:"feePrec"`
-	MinAmount string `json:"minAmount"`
+	Name      string  `json:"name"`
+	MoneyPrec int64   `json:"moneyPrec,string"`
+	Stock     string  `json:"stock"`
+	Money     string  `json:"money"`
+	StockPrec int64   `json:"stockPrec,string"`
+	FeePrec   int64   `json:"feePrec,string"`
+	MinAmount float64 `json:"minAmount,string"`
 }
 
 func (c *client) GetMarkets() (*MarketsResp, error) {

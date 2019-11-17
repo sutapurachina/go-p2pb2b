@@ -18,6 +18,11 @@ func TestGetDepthResult(t *testing.T) {
 	}
 	assert.NotNil(t, depthResult)
 	assert.True(t, depthResult.Success)
+
+	assert.True(t, depthResult.Success)
+	assert.NotEmpty(t, depthResult.CacheTime)
+	assert.NotEmpty(t, depthResult.CurrentTime)
+	assert.NotEmpty(t, depthResult.DepthResult)
 	assert.True(t, len(depthResult.DepthResult.Asks) == 10)
 	assert.True(t, len(depthResult.DepthResult.Bids) == 10)
 }

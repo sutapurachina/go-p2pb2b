@@ -17,8 +17,8 @@ type HistoryEntry struct {
 	ID     int64   `json:"id"`
 	Type   string  `json:"type"`
 	Time   float64 `json:"time"`
-	Amount string  `json:"amount"`
-	Price  string  `json:"price"`
+	Amount float64 `json:"amount,string"`
+	Price  float64 `json:"price,string"`
 }
 
 func (c *client) GetHistory(market string, lastID int64, limit int64) (*HistoryResp, error) {

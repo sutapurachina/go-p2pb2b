@@ -19,6 +19,11 @@ func TestGetHistory(t *testing.T) {
 	assert.NotNil(t, history)
 	assert.True(t, history.Success)
 	assert.True(t, len(history.HistoryEntries) == 10)
+	assert.NotEmpty(t, history.HistoryEntries[0].ID)
+	assert.NotEmpty(t, history.HistoryEntries[0].Amount)
+	assert.NotEmpty(t, history.HistoryEntries[0].Price)
+	assert.NotEmpty(t, history.HistoryEntries[0].Type)
+	assert.NotEmpty(t, history.HistoryEntries[0].Time)
 }
 
 func TestGetHistoryNegative(t *testing.T) {

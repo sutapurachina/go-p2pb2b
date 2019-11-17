@@ -3,6 +3,7 @@ package p2pb2b
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -40,8 +41,21 @@ func TestCreateOrder(t *testing.T) {
 		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
 
 		assert.Equal(t, pseudoAPIKey.String(), r.Header.Get("X-TXC-APIKEY"))
-		assert.Equal(t, "eyJyZXF1ZXN0IjoiZG9lc250Iiwibm9uY2UiOiJtYXR0ZXIiLCJtYXJrZXQiOiJFVEhfQlRDIiwic2lkZSI6ImJ1eSIsImFtb3VudCI6IjAuMDAxIiwicHJpY2UiOiIxMDAwIn0=", r.Header.Get("X-TXC-PAYLOAD"))
-		assert.Equal(t, "43af45d5df5e81bd4e8e562b35c5320193d989902babb00452419c6775e31cc0", r.Header.Get("X-TXC-SIGNATURE"))
+		assert.Equal(t, "eyJyZXF1ZXN0Ijoie3tyZXF1ZXN0fX0iLCJub25jZSI6Int7bm9uY2V9fSIsIm1hcmtldCI6IkVUSF9CVEMiLCJzaWRlIjoiYnV5IiwiYW1vdW50IjoiMC4wMDEiLCJwcmljZSI6IjEwMDAifQ==", r.Header.Get("X-TXC-PAYLOAD"))
+		assert.Equal(t, "b7cea8337772ecd0aa0af981037ea919b40645e8015becfdce36a3abdff6b440", r.Header.Get("X-TXC-SIGNATURE"))
+
+		expectedReqBody := `{
+			"market": "ETH_BTC",
+			"side": "buy",
+			"amount": "0.001",
+			"price": "1000",
+			"request": "{{request}}",
+			"nonce": "{{nonce}}"
+		}`
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		assert.Nil(t, err, err)
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(body))
@@ -54,8 +68,8 @@ func TestCreateOrder(t *testing.T) {
 	}
 	request := &CreateOrderRequest{
 		Request: Request{
-			Request: "doesnt",
-			Nonce:   "matter",
+			Request: "{{request}}",
+			Nonce:   "{{nonce}}",
 		},
 		Market: "ETH_BTC",
 		Side:   "buy",
@@ -101,8 +115,19 @@ func TestCancelOrder(t *testing.T) {
 		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
 
 		assert.Equal(t, pseudoAPIKey.String(), r.Header.Get("X-TXC-APIKEY"))
-		assert.Equal(t, "eyJyZXF1ZXN0IjoiZG9lc250Iiwibm9uY2UiOiJtYXR0ZXIiLCJtYXJrZXQiOiJFVEhfQlRDIiwib3JkZXJJZCI6MTIzfQ==", r.Header.Get("X-TXC-PAYLOAD"))
-		assert.Equal(t, "ada019a050f66d2311029191870b5c0d91b720f40836f09ad8414f3ce15ed232", r.Header.Get("X-TXC-SIGNATURE"))
+		assert.Equal(t, "eyJyZXF1ZXN0Ijoie3tyZXF1ZXN0fX0iLCJub25jZSI6Int7bm9uY2V9fSIsIm1hcmtldCI6IkVUSF9CVEMiLCJvcmRlcklkIjoyNTc0OX0=", r.Header.Get("X-TXC-PAYLOAD"))
+		assert.Equal(t, "f8883be6c0bacaae8c3e3aa4d3fc914cb2ee9303ec46648df2a265cc317e1cdd", r.Header.Get("X-TXC-SIGNATURE"))
+
+		expectedReqBody := `{
+			"market": "ETH_BTC",
+			"orderId": 25749,
+			"request": "{{request}}",
+			"nonce": "{{nonce}}"
+		}`
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		assert.Nil(t, err, err)
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(body))
@@ -115,11 +140,11 @@ func TestCancelOrder(t *testing.T) {
 	}
 	request := &CancelOrderRequest{
 		Request: Request{
-			Request: "doesnt",
-			Nonce:   "matter",
+			Request: "{{request}}",
+			Nonce:   "{{nonce}}",
 		},
 		Market:  "ETH_BTC",
-		OrderID: 123,
+		OrderID: 25749,
 	}
 	resp, err := client.CancelOrder(request)
 
@@ -168,11 +193,22 @@ func TestQueryUnexecuted(t *testing.T) {
 		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
 
 		assert.Equal(t, pseudoAPIKey.String(), r.Header.Get("X-TXC-APIKEY"))
-		assert.Equal(t, "eyJyZXF1ZXN0IjoiZG9lc250Iiwibm9uY2UiOiJtYXR0ZXIiLCJtYXJrZXQiOiJFVEhfQlRDIiwib2Zmc2V0IjowLCJsaW1pdCI6MTAwfQ==", r.Header.Get("X-TXC-PAYLOAD"))
-		assert.Equal(t, "1b56e05299d8809d5f937f58483f70ca8951a9c0b6eb81498212f1236362b5bc", r.Header.Get("X-TXC-SIGNATURE"))
+		assert.Equal(t, "eyJyZXF1ZXN0Ijoie3tyZXF1ZXN0fX0iLCJub25jZSI6Int7bm9uY2V9fSIsIm1hcmtldCI6IkVUSF9CVEMiLCJvZmZzZXQiOjAsImxpbWl0IjoxMDB9", r.Header.Get("X-TXC-PAYLOAD"))
+		assert.Equal(t, "407a831bebf538cd01c179dd88117b9e5753986ba4e1f820afee16317d37a814", r.Header.Get("X-TXC-SIGNATURE"))
+
+		expectedReqBody := `{
+			"market": "ETH_BTC",
+			"offset": 0,
+			"limit": 100,
+			"request": "{{request}}",
+			"nonce": "{{nonce}}"
+		}`
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		assert.Nil(t, err, err)
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
 
 		w.WriteHeader(http.StatusOK)
-
 		w.Write([]byte(body))
 	}))
 	defer ts.Close()
@@ -183,8 +219,8 @@ func TestQueryUnexecuted(t *testing.T) {
 	}
 	request := &QueryUnexecutedRequest{
 		Request: Request{
-			Request: "doesnt",
-			Nonce:   "matter",
+			Request: "{{request}}",
+			Nonce:   "{{nonce}}",
 		},
 		Market: "ETH_BTC",
 		Offset: 0,
@@ -197,7 +233,7 @@ func TestQueryUnexecuted(t *testing.T) {
 
 	respBytes, _ := json.Marshal(resp)
 	equal, _ := IsEqualJSON(body, string(respBytes))
-	assert.True(t, equal, fmt.Sprintf("%v is not equal to %v", body, resp))
+	assert.True(t, equal, fmt.Sprintf("%v is not equal to %s", body, respBytes))
 }
 
 func TestQueryExecuted(t *testing.T) {
@@ -232,7 +268,6 @@ func TestQueryExecuted(t *testing.T) {
 			  "price": "0.06296168",
 			  "type": "market",
 			  "id": 11669,
-			  "source": "",
 			  "side": "buy",
 			  "ctime": 1533626329.696647,
 			  "takerFee": "0.002",
@@ -254,11 +289,21 @@ func TestQueryExecuted(t *testing.T) {
 		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
 
 		assert.Equal(t, pseudoAPIKey.String(), r.Header.Get("X-TXC-APIKEY"))
-		assert.Equal(t, "eyJyZXF1ZXN0IjoiZG9lc250Iiwibm9uY2UiOiJtYXR0ZXIiLCJvZmZzZXQiOjAsImxpbWl0IjoxMDB9", r.Header.Get("X-TXC-PAYLOAD"))
-		assert.Equal(t, "78d32292f175514604561c9e3c6dd2b4f6e95eba8615a144b0589adc1bb22577", r.Header.Get("X-TXC-SIGNATURE"))
+		assert.Equal(t, "eyJyZXF1ZXN0Ijoie3tyZXF1ZXN0fX0iLCJub25jZSI6Int7bm9uY2V9fSIsIm9mZnNldCI6MCwibGltaXQiOjEwMH0=", r.Header.Get("X-TXC-PAYLOAD"))
+		assert.Equal(t, "260d4db5d0cd1f8139b90f3f14b624c050eb6496837681e7c41f2638f8d565dc", r.Header.Get("X-TXC-SIGNATURE"))
+
+		expectedReqBody := `{
+			"offset": 0,
+			"limit": 100,
+			"request": "{{request}}",
+			"nonce": "{{nonce}}"
+		}`
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		assert.Nil(t, err, err)
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
 
 		w.WriteHeader(http.StatusOK)
-
 		w.Write([]byte(body))
 	}))
 	defer ts.Close()
@@ -269,8 +314,8 @@ func TestQueryExecuted(t *testing.T) {
 	}
 	request := &QueryExecutedRequest{
 		Request: Request{
-			Request: "doesnt",
-			Nonce:   "matter",
+			Request: "{{request}}",
+			Nonce:   "{{nonce}}",
 		},
 		Offset: 0,
 		Limit:  100,
@@ -282,7 +327,7 @@ func TestQueryExecuted(t *testing.T) {
 
 	respBytes, _ := json.Marshal(resp)
 	equal, _ := IsEqualJSON(body, string(respBytes))
-	assert.True(t, equal, fmt.Sprintf("%v is not equal to %v", body, resp))
+	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, respBytes))
 }
 
 func TestQueryDeals(t *testing.T) {
@@ -303,7 +348,7 @@ func TestQueryDeals(t *testing.T) {
 			  "id": 548,
 			  "dealOrderId": 1237,
 			  "role": 1,
-			  "deal": "170.6344677716224055"
+			  "deal": "170.6344677716224"
 			}
 		  ]
 		}
@@ -315,11 +360,22 @@ func TestQueryDeals(t *testing.T) {
 		assert.Equal(t, "application/json", r.Header.Get("Content-Type"))
 
 		assert.Equal(t, pseudoAPIKey.String(), r.Header.Get("X-TXC-APIKEY"))
-		assert.Equal(t, "eyJyZXF1ZXN0IjoiZG9lc250Iiwibm9uY2UiOiJtYXR0ZXIiLCJvcmRlcklkIjoxMjMsIm9mZnNldCI6MCwibGltaXQiOjEwMH0=", r.Header.Get("X-TXC-PAYLOAD"))
-		assert.Equal(t, "7db3e70852db48e776d35614e80c0ad205e2908ee839367ccad3a5b98c8e6b58", r.Header.Get("X-TXC-SIGNATURE"))
+		assert.Equal(t, "eyJyZXF1ZXN0Ijoie3tyZXF1ZXN0fX0iLCJub25jZSI6Int7bm9uY2V9fSIsIm9yZGVySWQiOjEyMzQsIm9mZnNldCI6MTAsImxpbWl0IjoxMDB9", r.Header.Get("X-TXC-PAYLOAD"))
+		assert.Equal(t, "5fcc71442011d25e63749aff14995b8a539d9353c2ea12ae49e1fc77de49bb55", r.Header.Get("X-TXC-SIGNATURE"))
+
+		expectedReqBody := `{
+			"orderId": 1234,
+			"offset": 10,
+			"limit": 100,
+			"request": "{{request}}",
+			"nonce": "{{nonce}}"
+		}`
+		reqBody, _ := ioutil.ReadAll(r.Body)
+		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		assert.Nil(t, err, err)
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
 
 		w.WriteHeader(http.StatusOK)
-
 		w.Write([]byte(body))
 	}))
 	defer ts.Close()
@@ -330,11 +386,11 @@ func TestQueryDeals(t *testing.T) {
 	}
 	request := &QueryDealsRequest{
 		Request: Request{
-			Request: "doesnt",
-			Nonce:   "matter",
+			Request: "{{request}}",
+			Nonce:   "{{nonce}}",
 		},
-		OrderID: 123,
-		Offset:  0,
+		OrderID: 1234,
+		Offset:  10,
 		Limit:   100,
 	}
 	resp, err := client.QueryDeals(request)
@@ -344,5 +400,5 @@ func TestQueryDeals(t *testing.T) {
 
 	respBytes, _ := json.Marshal(resp)
 	equal, _ := IsEqualJSON(body, string(respBytes))
-	assert.True(t, equal, fmt.Sprintf("%v is not equal to %v", body, resp))
+	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, respBytes))
 }

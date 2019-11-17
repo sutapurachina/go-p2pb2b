@@ -2,7 +2,8 @@ package p2pb2b
 
 import (
 	"testing"
-	"github.com/satori/go.uuid"
+
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,8 +16,6 @@ func TestGetProducts(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	t.Logf("found %d products", len(products.Products))
-	t.Logf("sample product %+v", products.Products[0])
 
 	assert.NotNil(t, products)
 	assert.True(t, products.Success)

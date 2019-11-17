@@ -2,7 +2,8 @@ package p2pb2b
 
 import (
 	"testing"
-	"github.com/satori/go.uuid"
+
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,8 +16,6 @@ func TestGetSymbols(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	t.Logf("found %d symbols", len(symbols.Symbols))
-	t.Logf("sample symbol %+v", symbols.Symbols[0])
 
 	assert.NotNil(t, symbols)
 	assert.True(t, symbols.Success)
