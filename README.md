@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"os"
 
-	"gitlab.com/krinklesaurus/go-p2pb2b"
+	"github.com/krinklesaurus/go-p2pb2b"
 )
 
 func main() {

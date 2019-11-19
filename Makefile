@@ -1,5 +1,5 @@
 SOURCEDIR = .
-REPO=gitlab.com/krinklesaurus
+REPO=github.com/krinklesaurus
 DOCKER_REGISTRY=registry.${REPO}
 NAME ?= go-p2pb2b
 GO_VERSION=1.13.4
