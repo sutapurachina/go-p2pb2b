@@ -32,8 +32,8 @@ func TestPostBalancesNoKeyProvided(t *testing.T) {
 	}
 	request := &AccountBalancesRequest{
 		Request: Request{
-			Request: "doesnt",
-			Nonce:   "matter",
+			Request: "{{request}}",
+			Nonce:   "{{nonce}}",
 		},
 	}
 	_, err = client.PostBalances(request)
@@ -70,7 +70,7 @@ func TestPostBalances(t *testing.T) {
 		reqBody, _ := ioutil.ReadAll(r.Body)
 		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
-		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(body))
@@ -94,7 +94,7 @@ func TestPostBalances(t *testing.T) {
 
 	respBytes, _ := json.Marshal(resp)
 	equal, _ := IsEqualJSON(body, string(respBytes))
-	assert.True(t, equal, fmt.Sprintf("%v is not equal to %v", body, resp))
+	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }
 
 func TestPostCurrencyBalanceNoKeyProvided(t *testing.T) {
@@ -129,7 +129,6 @@ func TestPostCurrencyBalanceNoKeyProvided(t *testing.T) {
 func TestPostCurrencyBalance(t *testing.T) {
 	pseudoAPIKey := uuid.NewV4()
 	pseudoAPISecret := "4a894c5c-8a7e-4337-bb6b-9fde16e3dddd"
-
 	body := `{
 		"success": true,
 		"message": "",
@@ -158,7 +157,7 @@ func TestPostCurrencyBalance(t *testing.T) {
 		reqBody, _ := ioutil.ReadAll(r.Body)
 		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
-		assert.True(t, equal, fmt.Sprintf("%s is not equal to %v", reqBody, expectedReqBody))
+		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(body))
 	}))
@@ -181,5 +180,5 @@ func TestPostCurrencyBalance(t *testing.T) {
 
 	respBytes, _ := json.Marshal(resp)
 	equal, _ := IsEqualJSON(body, string(respBytes))
-	assert.True(t, equal, fmt.Sprintf("%v is not equal to %v", body, resp))
+	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }

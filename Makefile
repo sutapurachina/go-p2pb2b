@@ -29,8 +29,12 @@ validate:
 
 .PHONY: test
 test:
-	${GO_RUN} go test -v -race -cover $$(go list ./... | grep -v /vendor/)
+	${GO_RUN} go test -v -race -coverprofile=coverage.out $$(go list ./... | grep -v /vendor/)
 
+
+.PHONY: cover
+cover:
+	go tool cover -html=coverage.out
 
 .PHONY: build
 build:

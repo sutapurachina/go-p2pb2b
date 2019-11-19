@@ -9,10 +9,12 @@ import (
 
 type TickerResp struct {
 	Response
-	Ticker TickerEntry `json:"result"`
+	Result      Ticker  `json:"result"`
+	CacheTime   float64 `json:"cache_time"`
+	CurrentTime float64 `json:"current_time"`
 }
 
-type TickerEntry struct {
+type Ticker struct {
 	Bid    float64 `json:"bid,string"`
 	Ask    float64 `json:"ask,string"`
 	Open   float64 `json:"open,string"`

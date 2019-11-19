@@ -9,12 +9,14 @@ import (
 
 type ProductsResp struct {
 	Response
-	Products []Product `json:"result"`
+	Result      []Product `json:"result"`
+	CacheTime   float64   `json:"cache_time"`
+	CurrentTime float64   `json:"current_time"`
 }
 
 type Product struct {
 	ID         string `json:"id"`
-	FromSymbol string `json:"fromSymbols"`
+	FromSymbol string `json:"fromSymbol"`
 	ToSymbol   string `json:"toSymbol"`
 }
 

@@ -9,16 +9,18 @@ import (
 
 type MarketsResp struct {
 	Response
-	Markets []Market `json:"result"`
+	Result      []Market `json:"result"`
+	CacheTime   float64  `json:"cache_time"`
+	CurrentTime float64  `json:"current_time"`
 }
 
 type Market struct {
 	Name      string  `json:"name"`
-	MoneyPrec int64   `json:"moneyPrec,string"`
+	MoneyPrec int     `json:"moneyPrec,string"`
 	Stock     string  `json:"stock"`
 	Money     string  `json:"money"`
-	StockPrec int64   `json:"stockPrec,string"`
-	FeePrec   int64   `json:"feePrec,string"`
+	StockPrec int     `json:"stockPrec,string"`
+	FeePrec   int     `json:"feePrec,string"`
 	MinAmount float64 `json:"minAmount,string"`
 }
 

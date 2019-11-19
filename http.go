@@ -10,7 +10,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 )
 
 const HEADER_X_TXC_APIKEY = "X-TXC-APIKEY"
@@ -57,19 +56,6 @@ func mergeHeaders(firstHeaders map[string]string, secondHeaders map[string]strin
 		}
 	}
 	return firstHeaders
-}
-
-func query(params url.Values) string {
-	cleanedParams := url.Values{}
-	for k, v := range params {
-		if params[k][0] != "" {
-			cleanedParams[k] = v
-		}
-	}
-	if cleanedParams == nil || len(cleanedParams) == 0 {
-		return ""
-	}
-	return fmt.Sprintf("?%s", cleanedParams.Encode())
 }
 
 func (c *client) sendPost(url string, additionalHeaders map[string]string, body io.Reader) (*response, error) {

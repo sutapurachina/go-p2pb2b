@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 )
 
 type DepthResultResp struct {
 	Response
-	DepthResult DepthResultResult `json:"result"`
+	Result      DepthResultResult `json:"result"`
 	CacheTime   float64           `json:"cache_time"`
 	CurrentTime float64           `json:"current_time"`
 }
@@ -29,11 +28,8 @@ func (c *client) GetDepthResult(market string, limit int64) (*DepthResultResp, e
 	if limit <= 0 {
 		return nil, fmt.Errorf("parameter limit must not be <= 0")
 	}
-	v := url.Values{}
-	v.Set("market", market)
-	v.Add("limit", fmt.Sprintf("%d", limit))
 
-	url := fmt.Sprintf("%s/public/depth/result?%s", c.url, v.Encode())
+	url := fmt.Sprintf("%s/public/depth/result?market=%s&limit=%d", c.url, market, limit)
 
 	resp, err := c.sendGet(url, nil)
 	if err != nil {

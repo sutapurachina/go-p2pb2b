@@ -5,23 +5,24 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 )
 
 type OrderBookResp struct {
 	Response
-	OrderBook OrderBook `json:"result"`
+	Result      OrderBook `json:"result"`
+	CacheTime   float64   `json:"cache_time"`
+	CurrentTime float64   `json:"current_time"`
 }
 
 type OrderBook struct {
-	Offset int64            `json:"offset"`
-	Limit  int64            `json:"limit"`
-	Total  int64            `json:"total"`
+	Offset int              `json:"offset"`
+	Limit  int              `json:"limit"`
+	Total  int              `json:"total"`
 	Orders []OrderBookEntry `json:"orders"`
 }
 
 type OrderBookEntry struct {
-	ID        int64   `json:"id"`
+	ID        int     `json:"id"`
 	Left      float64 `json:"left,string"`
 	Market    string  `json:"market"`
 	Amount    float64 `json:"amount,string"`
@@ -49,13 +50,8 @@ func (c *client) GetOrderBook(market string, side string, offset int64, limit in
 	if limit <= 0 {
 		return nil, fmt.Errorf("parameter limit must not be <= 0")
 	}
-	v := url.Values{}
-	v.Set("market", market)
-	v.Add("side", side)
-	v.Add("offset", fmt.Sprintf("%d", offset))
-	v.Add("limit", fmt.Sprintf("%d", limit))
 
-	url := fmt.Sprintf("%s/public/book?%s", c.url, v.Encode())
+	url := fmt.Sprintf("%s/public/book?market=%s&side=%s&offset=%d&limit=%d", c.url, market, side, offset, limit)
 
 	resp, err := c.sendGet(url, nil)
 	if err != nil {

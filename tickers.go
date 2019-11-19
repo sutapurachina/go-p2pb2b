@@ -9,21 +9,24 @@ import (
 
 type TickersResp struct {
 	Response
-	Tickers map[string]TickersResult `json:"result"`
+	Result      map[string]TickersResult `json:"result"`
+	CacheTime   float64                  `json:"cache_time"`
+	CurrentTime float64                  `json:"current_time"`
 }
 
 type TickersResult struct {
-	At     int64        `json:"at"`
+	At     int          `json:"at"`
 	Ticker TickersEntry `json:"ticker"`
 }
 
 type TickersEntry struct {
-	Bid  float64 `json:"bid,string"`
-	Ask  float64 `json:"ask,string"`
-	Low  float64 `json:"low,string"`
-	High float64 `json:"high,string"`
-	Last float64 `json:"last,string"`
-	Vol  float64 `json:"vol,string"`
+	Bid    float64 `json:"bid,string"`
+	Ask    float64 `json:"ask,string"`
+	Low    float64 `json:"low,string"`
+	High   float64 `json:"high,string"`
+	Last   float64 `json:"last,string"`
+	Volume float64 `json:"vol,string"`
+	Change float64 `json:"change,string"`
 }
 
 func (c *client) GetTickers() (*TickersResp, error) {

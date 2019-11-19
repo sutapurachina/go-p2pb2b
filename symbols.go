@@ -9,7 +9,9 @@ import (
 
 type SymbolsResp struct {
 	Response
-	Symbols []string `json:"result"`
+	Result      []string `json:"result"`
+	CacheTime   float64  `json:"cache_time"`
+	CurrentTime float64  `json:"current_time"`
 }
 
 func (c *client) GetSymbols() (*SymbolsResp, error) {
