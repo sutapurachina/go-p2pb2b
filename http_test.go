@@ -40,7 +40,7 @@ func TestSendGet(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, r.Method, "GET")
 		assert.Equal(t, r.URL.String(), "/somePath")
-		assert.Equal(t, r.Header.Get(HEADER_X_TXC_APIKEY), "Ireallydontcare")
+		assert.Equal(t, r.Header.Get(HeaderXTxcAPIKey), "Ireallydontcare")
 	}))
 	defer ts.Close()
 
@@ -62,7 +62,7 @@ func TestSendGetWithAdditionalHeaders(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		assert.Equal(t, r.Method, "GET")
 		assert.Equal(t, r.URL.String(), "/somePath")
-		assert.Equal(t, r.Header.Get(HEADER_X_TXC_APIKEY), "Ireallydontcare")
+		assert.Equal(t, r.Header.Get(HeaderXTxcAPIKey), "Ireallydontcare")
 	}))
 	defer ts.Close()
 

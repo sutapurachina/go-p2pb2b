@@ -5,7 +5,8 @@ import (
 	"reflect"
 )
 
-func IsEqualJSON(s1 string, s2 string) (bool, error) {
+// isEqualJSON checks two json strings for equality
+func isEqualJSON(s1 string, s2 string) (bool, error) {
 	var o1 interface{}
 	var o2 interface{}
 

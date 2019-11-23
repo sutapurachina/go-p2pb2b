@@ -1,6 +1,7 @@
 package p2pb2b
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -10,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetTickers(t *testing.T) {
+func ExampleGetTickers(t *testing.T) {
 	pseudoAPIKey := uuid.NewV4()
 	pseudoAPISecret := "4a894c5c-8a7e-4337-bb6b-9fde16e3dddd"
 	body := `{
@@ -69,6 +70,8 @@ func TestGetTickers(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
+	respAsJSON, _ := json.Marshal(resp)
+	fmt.Println(string(respAsJSON))
 
 	assert.NotNil(t, resp, fmt.Sprintf("error: %v", err))
 	assert.Equal(t, true, resp.Success)

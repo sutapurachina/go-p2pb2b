@@ -11,7 +11,7 @@ import (
 type CreateOrderResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-	Order   Order  `json:"result"`
+	Result  Order  `json:"result"`
 }
 
 type Order struct {
@@ -41,7 +41,7 @@ type CreateOrderRequest struct {
 type CancelOrderResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-	Order   Order  `json:"result"`
+	Result  Order  `json:"result"`
 }
 
 type CancelOrderRequest struct {
@@ -67,7 +67,7 @@ type QueryUnexecutedResult struct {
 	Limit  int64             `json:"limit"`
 	Offset int64             `json:"offset"`
 	Total  int64             `json:"total"`
-	Orders []UnexecutedOrder `json:"result"`
+	Result []UnexecutedOrder `json:"result"`
 }
 
 type UnexecutedOrder struct {
@@ -94,7 +94,7 @@ type QueryExecutedRequest struct {
 
 type QueryExecutedResp struct {
 	Response
-	Orders map[string][]AltOrder `json:"result"`
+	Result map[string][]AltOrder `json:"result"`
 }
 
 type AltOrder struct {
@@ -164,10 +164,6 @@ func (c *client) CreateOrder(request *CreateOrderRequest) (*CreateOrderResp, err
 		return nil, err
 	}
 
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
-	}
-
 	var result CreateOrderResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
@@ -194,10 +190,6 @@ func (c *client) CancelOrder(request *CancelOrderRequest) (*CancelOrderResp, err
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
-	}
-
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
 	}
 
 	var result CancelOrderResp
@@ -228,10 +220,6 @@ func (c *client) QueryUnexecuted(request *QueryUnexecutedRequest) (*QueryUnexecu
 		return nil, err
 	}
 
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
-	}
-
 	var result QueryUnexecutedResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
@@ -260,10 +248,6 @@ func (c *client) QueryExecuted(request *QueryExecutedRequest) (*QueryExecutedRes
 		return nil, err
 	}
 
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
-	}
-
 	var result QueryExecutedResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
@@ -290,10 +274,6 @@ func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error)
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
-	}
-
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
 	}
 
 	var result QueryDealsResp

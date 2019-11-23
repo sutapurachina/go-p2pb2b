@@ -10,7 +10,7 @@ import (
 
 type AccountBalancesResp struct {
 	Response
-	Balances map[string]AccountBalance `json:"result"`
+	Result map[string]AccountBalance `json:"result"`
 }
 
 type AccountBalance struct {
@@ -24,7 +24,7 @@ type AccountBalancesRequest struct {
 
 type AccountCurrencyBalanceResp struct {
 	Response
-	CurrencyBalances map[string]AccountCurrencyBalance `json:"result"`
+	Result map[string]AccountCurrencyBalance `json:"result"`
 }
 
 type AccountCurrencyBalance struct {
@@ -57,10 +57,6 @@ func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalances
 		return nil, err
 	}
 
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
-	}
-
 	var result AccountBalancesResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
@@ -87,10 +83,6 @@ func (c *client) PostCurrencyBalance(request *AccountCurrencyBalanceRequest) (*A
 	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
-	}
-
-	if http.StatusOK != resp.StatusCode {
-		return nil, fmt.Errorf("status: %s, body: %s", resp.Status, bodyBytes)
 	}
 
 	var result AccountCurrencyBalanceResp

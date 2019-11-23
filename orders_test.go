@@ -53,7 +53,7 @@ func TestCreateOrder(t *testing.T) {
 			"nonce": "{{nonce}}"
 		}`
 		reqBody, _ := ioutil.ReadAll(r.Body)
-		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		equal, err := isEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
 		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 
@@ -82,7 +82,7 @@ func TestCreateOrder(t *testing.T) {
 	assert.Equal(t, true, resp.Success)
 
 	respBytes, _ := json.Marshal(resp)
-	equal, _ := IsEqualJSON(body, string(respBytes))
+	equal, _ := isEqualJSON(body, string(respBytes))
 	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }
 
@@ -125,7 +125,7 @@ func TestCancelOrder(t *testing.T) {
 			"nonce": "{{nonce}}"
 		}`
 		reqBody, _ := ioutil.ReadAll(r.Body)
-		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		equal, err := isEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
 		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 
@@ -152,7 +152,7 @@ func TestCancelOrder(t *testing.T) {
 	assert.Equal(t, true, resp.Success)
 
 	respBytes, _ := json.Marshal(resp)
-	equal, _ := IsEqualJSON(body, string(respBytes))
+	equal, _ := isEqualJSON(body, string(respBytes))
 	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }
 
@@ -204,7 +204,7 @@ func TestQueryUnexecuted(t *testing.T) {
 			"nonce": "{{nonce}}"
 		}`
 		reqBody, _ := ioutil.ReadAll(r.Body)
-		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		equal, err := isEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
 		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 
@@ -232,7 +232,7 @@ func TestQueryUnexecuted(t *testing.T) {
 	assert.Equal(t, true, resp.Success)
 
 	respBytes, _ := json.Marshal(resp)
-	equal, _ := IsEqualJSON(body, string(respBytes))
+	equal, _ := isEqualJSON(body, string(respBytes))
 	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }
 
@@ -299,7 +299,7 @@ func TestQueryExecuted(t *testing.T) {
 			"nonce": "{{nonce}}"
 		}`
 		reqBody, _ := ioutil.ReadAll(r.Body)
-		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		equal, err := isEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
 		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 
@@ -326,7 +326,7 @@ func TestQueryExecuted(t *testing.T) {
 	assert.Equal(t, true, resp.Success)
 
 	respBytes, _ := json.Marshal(resp)
-	equal, _ := IsEqualJSON(body, string(respBytes))
+	equal, _ := isEqualJSON(body, string(respBytes))
 	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }
 
@@ -371,7 +371,7 @@ func TestQueryDeals(t *testing.T) {
 			"nonce": "{{nonce}}"
 		}`
 		reqBody, _ := ioutil.ReadAll(r.Body)
-		equal, err := IsEqualJSON(expectedReqBody, string(reqBody))
+		equal, err := isEqualJSON(expectedReqBody, string(reqBody))
 		assert.Nil(t, err, err)
 		assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", expectedReqBody, string(reqBody)))
 
@@ -399,6 +399,6 @@ func TestQueryDeals(t *testing.T) {
 	assert.Equal(t, true, resp.Success)
 
 	respBytes, _ := json.Marshal(resp)
-	equal, _ := IsEqualJSON(body, string(respBytes))
+	equal, _ := isEqualJSON(body, string(respBytes))
 	assert.True(t, equal, fmt.Sprintf("%s is not equal to %s", body, string(respBytes)))
 }

@@ -20,7 +20,6 @@ clean:
 		rm -rf vendor/
 
 
-# validate the project is correct and all necessary information is available
 .PHONY: validate
 validate:
 	export GO111MODULE=on &&\
