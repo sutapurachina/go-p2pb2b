@@ -1,5 +1,7 @@
 # Golang p2pb2b API library
 
+[![GoDoc](https://godoc.org/github.com/krinklesaurus/go-p2pb2b?status.svg)](https://godoc.org/github.com/krinklesaurus/go-p2pb2b)
+
 ## API Docs
 
 p2pb2b API docs can be found [here](https://documenter.getpostman.com/view/6288660/SVYxnEmD?version=latest#b4c28f20-582e-4a71-ab13-ce2de8c9151d)
