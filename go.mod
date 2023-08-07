@@ -1,4 +1,4 @@
-module github.com/krinklesaurus/go-p2pb2b
+module github.com/sutapurachina/go-p2pb2b
 
 go 1.13
 
