@@ -3,7 +3,7 @@ package p2pb2b
 import (
 	"bytes"
 	"crypto/hmac"
-	"crypto/sha256"
+	"crypto/sha512"
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
@@ -79,7 +79,7 @@ func (c *client) sendPost(url string, additionalHeaders map[string]string, body 
 	additionalHeaders[HeaderXTxcPayloard] = base64.StdEncoding.EncodeToString(bodyBytes)
 
 	if c.auth != nil {
-		h := hmac.New(sha256.New, []byte(c.auth.APISecret))
+		h := hmac.New(sha512.New, []byte(c.auth.APISecret))
 		h.Write(bodyBytes)
 		signature := hex.EncodeToString(h.Sum(nil))
 		additionalHeaders[HeaderXTxcSignature] = signature
