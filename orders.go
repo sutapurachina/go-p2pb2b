@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
 type CreateOrderResp struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-	Result  Order  `json:"result"`
+	Success   bool   `json:"success"`
+	Message   string `json:"message"`
+	ErrorCode string `json:"errorCode"`
+	Result    Order  `json:"result"`
 }
 
 type Order struct {
@@ -159,7 +160,7 @@ func (c *client) CreateOrder(request *CreateOrderRequest) (*CreateOrderResp, err
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +188,7 @@ func (c *client) CancelOrder(request *CancelOrderRequest) (*CancelOrderResp, err
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -215,7 +216,7 @@ func (c *client) QueryUnexecuted(request *QueryUnexecutedRequest) (*QueryUnexecu
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -243,7 +244,7 @@ func (c *client) QueryExecuted(request *QueryExecutedRequest) (*QueryExecutedRes
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -271,7 +272,7 @@ func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error)
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
