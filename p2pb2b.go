@@ -8,7 +8,7 @@ import (
 )
 
 // baseAPI is the p2pb2b API endpoint
-const baseAPI = "https://api.p2pb2b.io/api/v1"
+const baseAPI = "https://api.p2pb2b.com/api/v2"
 
 // for testing purposes only
 func newClientWithURL(url string, apiKey string, apiSecret string) (Client, error) {
