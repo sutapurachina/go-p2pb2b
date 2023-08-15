@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -64,7 +63,7 @@ func mergeHeaders(firstHeaders map[string]string, secondHeaders map[string]strin
 }
 
 func (c *client) sendPost(url string, additionalHeaders map[string]string, body io.Reader) (*response, error) {
-	bodyBytes, err := ioutil.ReadAll(body)
+	bodyBytes, err := io.ReadAll(body)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +79,7 @@ func (c *client) sendPost(url string, additionalHeaders map[string]string, body 
 
 	if c.auth != nil {
 		h := hmac.New(sha512.New, []byte(c.auth.APISecret))
-		h.Write(bodyBytes)
+		h.Write([]byte(additionalHeaders[HeaderXTxcPayloard]))
 		signature := hex.EncodeToString(h.Sum(nil))
 		additionalHeaders[HeaderXTxcSignature] = signature
 	}
