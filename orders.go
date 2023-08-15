@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type CreateOrderResp struct {
@@ -147,6 +149,8 @@ type Record struct {
 
 func (c *client) CreateOrder(request *CreateOrderRequest) (*CreateOrderResp, error) {
 	url := fmt.Sprintf("%s/order/new", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/order/new"
 	asJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
@@ -175,6 +179,8 @@ func (c *client) CreateOrder(request *CreateOrderRequest) (*CreateOrderResp, err
 
 func (c *client) CancelOrder(request *CancelOrderRequest) (*CancelOrderResp, error) {
 	url := fmt.Sprintf("%s/order/cancel", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/order/cancel"
 	asJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
