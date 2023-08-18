@@ -9,6 +9,7 @@ import (
 
 // baseAPI is the p2pb2b API endpoint
 const baseAPI = "https://api.p2pb2b.com/api/v2"
+const websocketApi = "wss://apiws.p2pb2b.com/"
 
 // for testing purposes only
 func newClientWithURL(url string, apiKey string, apiSecret string) (Client, error) {
@@ -22,7 +23,8 @@ func newClientWithURL(url string, apiKey string, apiSecret string) (Client, erro
 			APIKey:    apiKey,
 			APISecret: apiSecret,
 		},
-		url: url,
+		url:   url,
+		wsUrl: websocketApi,
 	}, nil
 }
 

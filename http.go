@@ -26,9 +26,10 @@ type auth struct {
 }
 
 type client struct {
-	http *http.Client
-	auth *auth
-	url  string
+	http  *http.Client
+	auth  *auth
+	url   string
+	wsUrl string
 }
 
 type response struct {
