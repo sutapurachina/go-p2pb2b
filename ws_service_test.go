@@ -7,12 +7,14 @@ import (
 )
 
 func TestLastPriceStream(t *testing.T) {
-	lastPriceC, _, err := LastPriceStream("ETH_USDT")
+	lastPriceC, stopC, doneC, err := LastPriceStream("ETH_USDT")
 	assert.NoError(t, err)
-	for {
+	for i := 0; i < 5; i++ {
 		select {
 		case res := <-lastPriceC:
 			fmt.Println(res)
 		}
 	}
+	stopC <- struct{}{}
+	<-doneC
 }
