@@ -21,25 +21,26 @@ type LastPriceInfo struct {
 	Id     interface{} `json:"id"`
 }
 
-func LastPriceStream(symbols ...string) (chan *LastPriceInfo, chan struct{}, error) {
+func LastPriceStream(symbols ...string) (chan *LastPriceInfo, chan struct{}, chan struct{}, error) {
 	const method = "price.subscribe"
 	c, _, err := websocket.DefaultDialer.Dial(websocketApi, nil)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	c.SetReadLimit(655535000000)
 
 	jsonData, err := json.Marshal(newWsRequest(method, symbols...))
 	err = c.WriteMessage(websocket.TextMessage, jsonData)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	_, _, err = c.ReadMessage()
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	ksStop := keepAlive(c, 20*time.Second)
-	stopC := make(chan struct{}, 1)
+	stopC := make(chan struct{})
+	doneC := make(chan struct{})
 	lastPriceC := make(chan *LastPriceInfo)
 	go func() {
 		for {
@@ -56,6 +57,7 @@ func LastPriceStream(symbols ...string) (chan *LastPriceInfo, chan struct{}, err
 					return
 				}
 				ksStop <- struct{}{}
+				doneC <- struct{}{}
 				return
 			default:
 				_, message, err := c.ReadMessage()
@@ -82,7 +84,7 @@ func LastPriceStream(symbols ...string) (chan *LastPriceInfo, chan struct{}, err
 		}
 	}()
 
-	return lastPriceC, stopC, nil
+	return lastPriceC, stopC, doneC, nil
 }
 
 func keepAlive(c *websocket.Conn, timeout time.Duration) chan struct{} {
