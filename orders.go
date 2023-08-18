@@ -209,6 +209,8 @@ func (c *client) CancelOrder(request *CancelOrderRequest) (*CancelOrderResp, err
 
 func (c *client) QueryUnexecuted(request *QueryUnexecutedRequest) (*QueryUnexecutedResp, error) {
 	url := fmt.Sprintf("%s/orders", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/orders"
 	asJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
@@ -237,6 +239,8 @@ func (c *client) QueryUnexecuted(request *QueryUnexecutedRequest) (*QueryUnexecu
 
 func (c *client) QueryExecuted(request *QueryExecutedRequest) (*QueryExecutedResp, error) {
 	url := fmt.Sprintf("%s/account/order_history", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/account/order_history"
 	asJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
@@ -277,12 +281,10 @@ func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error)
 	if err != nil {
 		return nil, err
 	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-
 	var result QueryDealsResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
