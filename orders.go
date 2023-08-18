@@ -269,6 +269,8 @@ func (c *client) QueryExecuted(request *QueryExecutedRequest) (*QueryExecutedRes
 
 func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error) {
 	url := fmt.Sprintf("%s/account/order", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/account/order"
 	asJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
