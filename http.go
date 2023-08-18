@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 const (
@@ -40,9 +41,29 @@ type response struct {
 }
 
 type wsRequest struct {
-	Method string        `json:"method"`
-	Params []interface{} `json:"params"`
-	Id     int           `json:"id"`
+	Method string   `json:"method"`
+	Params []string `json:"params"`
+	Id     int64    `json:"id"`
+}
+
+func newWsRequest(method string, params ...string) *wsRequest {
+	req := &wsRequest{
+		Method: method,
+		Params: []string{},
+	}
+	for _, p := range params {
+		req.Params = append(req.Params, p)
+	}
+	req.Id = time.Now().Unix()
+	return req
+}
+
+func newPingRequest() *wsRequest {
+	return newWsRequest("server.ping")
+}
+
+func newUnsubscribeRequest(endpoint string) *wsRequest {
+	return newWsRequest(endpoint + ".unsubscribe")
 }
 
 func checkHTTPStatus(resp response, expected ...int) error {
