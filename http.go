@@ -39,6 +39,12 @@ type response struct {
 	Status     string
 }
 
+type wsRequest struct {
+	Method string        `json:"method"`
+	Params []interface{} `json:"params"`
+	Id     int           `json:"id"`
+}
+
 func checkHTTPStatus(resp response, expected ...int) error {
 	for _, e := range expected {
 		if resp.StatusCode == e {
