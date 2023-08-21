@@ -73,7 +73,7 @@ type UnexecutedOrder struct {
 	Market    string  `json:"market"`
 	Amount    float64 `json:"amount"`
 	Type      string  `json:"type"`
-	Price     float64 `json:"price"`
+	Price     string  `json:"price"`
 	Timestamp float64 `json:"timestamp"`
 	Side      string  `json:"side"`
 	TakerFee  float64 `json:"takerFee"`
