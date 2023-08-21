@@ -76,17 +76,17 @@ type QueryUnexecutedResult struct {
 
 type UnexecutedOrder struct {
 	Id        int     `json:"id"`
-	Left      string  `json:"left"`
+	Left      float64 `json:"left"`
 	Market    string  `json:"market"`
-	Amount    string  `json:"amount"`
+	Amount    float64 `json:"amount"`
 	Type      string  `json:"type"`
-	Price     string  `json:"price"`
+	Price     float64 `json:"price"`
 	Timestamp float64 `json:"timestamp"`
 	Side      string  `json:"side"`
-	TakerFee  string  `json:"takerFee"`
-	MakerFee  string  `json:"makerFee"`
-	DealStock string  `json:"dealStock"`
-	DealMoney string  `json:"dealMoney"`
+	TakerFee  float64 `json:"takerFee"`
+	MakerFee  float64 `json:"makerFee"`
+	DealStock float64 `json:"dealStock"`
+	DealMoney float64 `json:"dealMoney"`
 }
 
 type QueryExecutedRequest struct {
