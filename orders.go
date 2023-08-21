@@ -61,32 +61,32 @@ type QueryUnexecutedRequest struct {
 }
 
 type QueryUnexecutedResp struct {
-	Success bool                  `json:"success"`
-	Message string                `json:"message"`
-	Result  QueryUnexecutedResult `json:"result"`
+	Success   bool                  `json:"success"`
+	Message   string                `json:"message"`
+	ErrorCode string                `json:"errorCode"`
+	Result    QueryUnexecutedResult `json:"result"`
 }
 
 type QueryUnexecutedResult struct {
 	Limit  int64             `json:"limit"`
 	Offset int64             `json:"offset"`
 	Total  int64             `json:"total"`
-	Result []UnexecutedOrder `json:"result"`
+	Orders []UnexecutedOrder `json:"orders"`
 }
 
 type UnexecutedOrder struct {
-	Amount    float64 `json:"amount,string"`
-	DealFee   float64 `json:"dealFee,string"`
-	DealMoney float64 `json:"dealMoney,string"`
-	DealStock float64 `json:"dealStock,string"`
-	Left      float64 `json:"left,string"`
-	MakerFee  float64 `json:"makerFee,string"`
+	Id        int     `json:"id"`
+	Left      string  `json:"left"`
 	Market    string  `json:"market"`
-	ID        int64   `json:"id"`
-	Price     float64 `json:"price,string"`
-	Side      string  `json:"side"`
-	TakerFee  float64 `json:"takerFee,string"`
-	Timestamp float64 `json:"timestamp"`
+	Amount    string  `json:"amount"`
 	Type      string  `json:"type"`
+	Price     string  `json:"price"`
+	Timestamp float64 `json:"timestamp"`
+	Side      string  `json:"side"`
+	TakerFee  string  `json:"takerFee"`
+	MakerFee  string  `json:"makerFee"`
+	DealStock string  `json:"dealStock"`
+	DealMoney string  `json:"dealMoney"`
 }
 
 type QueryExecutedRequest struct {
