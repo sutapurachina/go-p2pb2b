@@ -61,17 +61,10 @@ type QueryUnexecutedRequest struct {
 }
 
 type QueryUnexecutedResp struct {
-	Success   bool                  `json:"success"`
-	Message   string                `json:"message"`
-	ErrorCode string                `json:"errorCode"`
-	Result    QueryUnexecutedResult `json:"result"`
-}
-
-type QueryUnexecutedResult struct {
-	Limit  int64             `json:"limit"`
-	Offset int64             `json:"offset"`
-	Total  int64             `json:"total"`
-	Orders []UnexecutedOrder `json:"orders"`
+	Success   bool              `json:"success"`
+	Message   string            `json:"message"`
+	ErrorCode string            `json:"errorCode"`
+	Result    []UnexecutedOrder `json:"result"`
 }
 
 type UnexecutedOrder struct {
