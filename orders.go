@@ -68,18 +68,30 @@ type QueryUnexecutedResp struct {
 }
 
 type UnexecutedOrder struct {
-	Id        int     `json:"id"`
-	Left      float64 `json:"left"`
-	Market    string  `json:"market"`
-	Amount    float64 `json:"amount"`
-	Type      string  `json:"type"`
-	Price     string  `json:"price"`
-	Timestamp string  `json:"timestamp"`
-	Side      string  `json:"side"`
-	TakerFee  float64 `json:"takerFee"`
-	MakerFee  float64 `json:"makerFee"`
-	DealStock float64 `json:"dealStock"`
-	DealMoney float64 `json:"dealMoney"`
+	Id        int      `json:"id"`
+	Left      float64  `json:"left"`
+	Market    string   `json:"market"`
+	Amount    float64  `json:"amount"`
+	Type      string   `json:"type"`
+	Price     string   `json:"price"`
+	Timestamp JSONTime `json:"timestamp"`
+	Side      string   `json:"side"`
+	TakerFee  float64  `json:"takerFee"`
+	MakerFee  float64  `json:"makerFee"`
+	DealStock float64  `json:"dealStock"`
+	DealMoney float64  `json:"dealMoney"`
+}
+type JSONTime time.Time
+
+func (j *JSONTime) UnmarshalJSON(data []byte) error {
+	trimmedData := string(data)
+	trimmedData = trimmedData[1 : len(trimmedData)-1] // Remove surrounding quotes
+	parsedTime, err := time.Parse(time.RFC3339Nano, trimmedData)
+	if err != nil {
+		return err
+	}
+	*j = JSONTime(parsedTime)
+	return nil
 }
 
 type QueryExecutedRequest struct {
