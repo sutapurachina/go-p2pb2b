@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type AccountBalancesResp struct {
@@ -52,7 +54,7 @@ func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalances
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +69,8 @@ func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalances
 
 func (c *client) PostCurrencyBalance(request *AccountCurrencyBalanceRequest) (*AccountCurrencyBalanceResp, error) {
 	url := fmt.Sprintf("%s/account/balance", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/account/balance"
 	asJSON, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
@@ -80,7 +84,7 @@ func (c *client) PostCurrencyBalance(request *AccountCurrencyBalanceRequest) (*A
 		return nil, err
 	}
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
