@@ -68,7 +68,7 @@ type QueryUnexecutedResp struct {
 }
 
 type UnexecutedOrder struct {
-	Id     int    `json:"id"`
+	Id     int    `json:"orderId"`
 	Left   string `json:"left"`
 	Market string `json:"market"`
 	Amount string `json:"amount"`
