@@ -26,7 +26,7 @@ type AccountBalancesRequest struct {
 
 type AccountCurrencyBalanceResp struct {
 	Response
-	Result map[string]AccountCurrencyBalance `json:"result"`
+	Result AccountCurrencyBalance `json:"result"`
 }
 
 type AccountCurrencyBalance struct {
