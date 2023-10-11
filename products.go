@@ -2,8 +2,9 @@ package p2pb2b
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -26,16 +27,14 @@ func (c *client) GetProducts() (*ProductsResp, error) {
 	if err != nil {
 		return nil, err
 	}
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 	err = checkHTTPStatus(*resp, http.StatusOK)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(fmt.Sprintf("%s: %s\n", err.Error(), string(bodyBytes)))
 	}
-
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
 	var result ProductsResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {

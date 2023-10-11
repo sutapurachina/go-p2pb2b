@@ -3,6 +3,7 @@ package p2pb2b
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -49,14 +50,13 @@ func (c *client) PostBalances(request *AccountBalancesRequest) (*AccountBalances
 	if err != nil {
 		return nil, err
 	}
-	err = checkHTTPStatus(*resp, http.StatusOK)
-	if err != nil {
-		return nil, err
-	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("%s: %s\n", err.Error(), string(bodyBytes)))
 	}
 
 	var result AccountBalancesResp
@@ -79,16 +79,14 @@ func (c *client) PostCurrencyBalance(request *AccountCurrencyBalanceRequest) (*A
 	if err != nil {
 		return nil, err
 	}
-	err = checkHTTPStatus(*resp, http.StatusOK)
-	if err != nil {
-		return nil, err
-	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("%s: %s\n", err.Error(), string(bodyBytes)))
+	}
 	var result AccountCurrencyBalanceResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
