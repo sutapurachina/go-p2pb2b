@@ -193,14 +193,13 @@ func (c *client) CancelOrder(request *CancelOrderRequest) (*CancelOrderResp, err
 	if err != nil {
 		return nil, err
 	}
-	err = checkHTTPStatus(*resp, http.StatusOK)
-	if err != nil {
-		return nil, err
-	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(err.Error() + ":" + string(bodyBytes))
 	}
 
 	var result CancelOrderResp
@@ -223,14 +222,13 @@ func (c *client) QueryUnexecuted(request *QueryUnexecutedRequest) (*QueryUnexecu
 	if err != nil {
 		return nil, err
 	}
-	err = checkHTTPStatus(*resp, http.StatusOK)
-	if err != nil {
-		return nil, err
-	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(err.Error() + ":" + string(bodyBytes))
 	}
 
 	var result QueryUnexecutedResp
@@ -253,14 +251,13 @@ func (c *client) QueryExecuted(request *QueryExecutedRequest) (*QueryExecutedRes
 	if err != nil {
 		return nil, err
 	}
-	err = checkHTTPStatus(*resp, http.StatusOK)
-	if err != nil {
-		return nil, err
-	}
-
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(err.Error() + ":" + string(bodyBytes))
 	}
 
 	var result QueryExecutedResp
@@ -283,13 +280,13 @@ func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error)
 	if err != nil {
 		return nil, err
 	}
-	err = checkHTTPStatus(*resp, http.StatusOK)
-	if err != nil {
-		return nil, err
-	}
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(err.Error() + ":" + string(bodyBytes))
 	}
 	var result QueryDealsResp
 	err = json.Unmarshal(bodyBytes, &result)
