@@ -50,6 +50,7 @@ type Client interface {
 	GetDepthResult(market string, limit int64) (*DepthResultResp, error)
 	GetProducts() (*ProductsResp, error)
 	GetSymbols() (*SymbolsResp, error)
+	DealsHistoryByMarket(request *DealsHistoryByMarketRequest) (*DealHistoryResp, error)
 }
 
 // Response is the basic http response struct

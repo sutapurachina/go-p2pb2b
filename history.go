@@ -1,11 +1,14 @@
 package p2pb2b
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type HistoryResp struct {
@@ -21,6 +24,31 @@ type HistoryEntry struct {
 	Time   float64 `json:"time"`
 	Amount float64 `json:"amount,string"`
 	Price  float64 `json:"price,string"`
+}
+
+type DealHistoryResp struct {
+	Response
+	ErrorCode string         `json:"errorCode"`
+	Result    DealHistoryRes `json:"result"`
+}
+
+type DealHistoryEntry struct {
+	DealId          int64   `json:"deal_id"`
+	DealTime        float64 `json:"deal_time"`
+	DealOrderId     int64   `json:"deal_order_id"`
+	OppositeOrderId int64   `json:"opposite_order_id"`
+	Side            string  `json:"side"`
+	Price           string  `json:"price"`
+	Amount          string  `json:"amount"`
+	Deal            string  `json:"deal"`
+	DealFee         string  `json:"deal_fee"`
+	Role            string  `json:"role"`
+	IsSelfTrade     bool    `json:"isSelfTrade"`
+}
+
+type DealHistoryRes struct {
+	Total int                `json:"total"`
+	Deals []DealHistoryEntry `json:"deals"`
 }
 
 func (c *client) GetHistory(market string, lastID int64, limit int64) (*HistoryResp, error) {
@@ -50,6 +78,36 @@ func (c *client) GetHistory(market string, lastID int64, limit int64) (*HistoryR
 	}
 
 	var result HistoryResp
+	err = json.Unmarshal(bodyBytes, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (c *client) DealsHistoryByMarket(request *DealsHistoryByMarketRequest) (*DealHistoryResp, error) {
+
+	url := fmt.Sprintf("%s/account/market_deal_history", c.url)
+	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+	request.Request.Request = "/api/v2/account/market_deal_history"
+	asJSON, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := c.sendPost(url, nil, bytes.NewReader(asJSON))
+	if err != nil {
+		return nil, err
+	}
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	err = checkHTTPStatus(*resp, http.StatusOK)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("%s: %s\n", err.Error(), string(bodyBytes)))
+	}
+
+	var result DealHistoryResp
 	err = json.Unmarshal(bodyBytes, &result)
 	if err != nil {
 		return nil, err

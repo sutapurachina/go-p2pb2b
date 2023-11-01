@@ -131,6 +131,15 @@ type QueryDealsRequest struct {
 	Limit   int64 `json:"limit"`
 }
 
+type DealsHistoryByMarketRequest struct {
+	Request
+	Market    string `json:"market"`
+	StartTime int64  `json:"startTime"`
+	EndTime   int64  `json:"endTime"`
+	Offset    int64  `json:"offset"`
+	Limit     int64  `json:"limit"`
+}
+
 type QueryDealsResp struct {
 	Response
 	Result QueryDealsResult `json:"result"`
@@ -295,3 +304,31 @@ func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error)
 	}
 	return &result, nil
 }
+
+//func (c *client) QueryDeals(request *QueryDealsRequest) (*QueryDealsResp, error) {
+//	url := fmt.Sprintf("%s/account/order", c.url)
+//	request.Request.Nonce = strconv.FormatInt(time.Now().UnixMilli(), 10)
+//	request.Request.Request = "/api/v2/account/order"
+//	asJSON, err := json.Marshal(request)
+//	if err != nil {
+//		return nil, err
+//	}
+//	resp, err := c.sendPost(url, nil, bytes.NewReader(asJSON))
+//	if err != nil {
+//		return nil, err
+//	}
+//	bodyBytes, err := io.ReadAll(resp.Body)
+//	if err != nil {
+//		return nil, err
+//	}
+//	err = checkHTTPStatus(*resp, http.StatusOK)
+//	if err != nil {
+//		return nil, errors.New(err.Error() + ":" + string(bodyBytes))
+//	}
+//	var result QueryDealsResp
+//	err = json.Unmarshal(bodyBytes, &result)
+//	if err != nil {
+//		return nil, err
+//	}
+//	return &result, nil
+//}
