@@ -101,3 +101,21 @@ func TestGetHistoryNegative(t *testing.T) {
 	assert.Nil(t, history)
 	assert.NotNil(t, err)
 }
+
+func TestClient_GetHistory(t *testing.T) {
+	client, err := NewClient("153f17bc07ff9cfa1be54f241b1cccdc", "a8035fe8f77d9455916ea594d8b3fa79")
+	assert.NoError(t, err)
+	req := QueryExecutedRequest{
+		Offset: 0,
+		Limit:  100,
+	}
+	history, err := client.QueryExecuted(&req)
+	for _, a := range history.Result {
+		for _, b := range a {
+			if b.ID == 173798333648 {
+				fmt.Println(b.ID, b.Price, b.Side, b.Ftime)
+			}
+		}
+	}
+
+}

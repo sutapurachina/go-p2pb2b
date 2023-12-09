@@ -71,3 +71,19 @@ func TestGetTicker(t *testing.T) {
 	assert.Equal(t, -0.95, resp.Result.Change)
 
 }
+
+func TestClient_Klines(t *testing.T) {
+	pseudoAPIKey := uuid.NewV4()
+	pseudoAPISecret := "4a894c5c-8a7e-4337-bb6b-9fde16e3dddd"
+	client, err := NewClient(pseudoAPIKey.String(), pseudoAPISecret)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	resp, err := client.Klines("SDFA_USDT", "1m", 3, 0)
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	fmt.Println(resp)
+}

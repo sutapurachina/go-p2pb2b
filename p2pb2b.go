@@ -51,6 +51,7 @@ type Client interface {
 	GetProducts() (*ProductsResp, error)
 	GetSymbols() (*SymbolsResp, error)
 	DealsHistoryByMarket(request *DealsHistoryByMarketRequest) (*DealHistoryResp, error)
+	Klines(market, interval string, limit, offset int) (*KlineResponse, error)
 }
 
 // Response is the basic http response struct
