@@ -80,10 +80,9 @@ func TestClient_Klines(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	resp, err := client.Klines("SDFA_USDT", "1m", 3, 0)
+	resp, err := client.Klines("SDFA_USDT", "1m", 15, 0)
 	if err != nil {
 		t.Error(err.Error())
 	}
-
 	fmt.Println(resp)
 }
