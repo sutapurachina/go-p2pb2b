@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 type TickerResp struct {
@@ -68,7 +69,7 @@ func (c *client) GetTicker(market string) (*TickerResp, error) {
 	return &result, nil
 }
 
-func (c *client) Klines(market, interval string, limit, offset int) (*KlineResponse, error) {
+func (c *client) Klines(market, interval string, limit, offset int) ([]*Kline, error) {
 	url := fmt.Sprintf("%s/public/market/kline?market=%s&interval=%s&limit=%d&offset=%d", c.url, market, interval, limit, offset)
 	resp, err := c.sendGet(url, nil)
 	if err != nil {
@@ -88,6 +89,50 @@ func (c *client) Klines(market, interval string, limit, offset int) (*KlineRespo
 	if err != nil {
 		return nil, err
 	}
-	return &result, nil
+	res := make([]*Kline, 0, 1)
+	for _, klineArr := range result.Result {
+		kline := Kline{}
+		for idx, par := range klineArr {
+			switch idx {
+			case 0:
+				kline.KlineOpenTime = int64(par.(float64))
+			case 1:
+				kline.OpenPrice, err = strconv.ParseFloat(par.(string), 64)
+				if err != nil {
+					return nil, err
+				}
+			case 2:
+				kline.ClosePrice, err = strconv.ParseFloat(par.(string), 64)
+				if err != nil {
+					return nil, err
+				}
+			case 3:
+				kline.HighestPrice, err = strconv.ParseFloat(par.(string), 64)
+				if err != nil {
+					return nil, err
+				}
+			case 4:
+				kline.LowestPrice, err = strconv.ParseFloat(par.(string), 64)
+				if err != nil {
+					return nil, err
+				}
+			case 5:
+				kline.VolumeForStockCurrency, err = strconv.ParseFloat(par.(string), 64)
+				if err != nil {
+					return nil, err
+				}
+			case 6:
+				kline.VolumeForMoney, err = strconv.ParseFloat(par.(string), 64)
+				if err != nil {
+					return nil, err
+				}
+			case 7:
+				kline.MarketName = par.(string)
+
+			}
+			res = append(res, &kline)
+		}
+	}
+	return res, nil
 
 }

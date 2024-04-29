@@ -84,5 +84,7 @@ func TestClient_Klines(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	fmt.Println(resp)
+	for _, k := range resp {
+		fmt.Println(k)
+	}
 }
